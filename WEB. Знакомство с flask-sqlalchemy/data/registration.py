@@ -8,7 +8,7 @@ class RegisterForm(FlaskForm):
     surname = StringField('surname', validators=[DataRequired()])
     clas = StringField('clas', validators=[DataRequired()])
     email = EmailField('email', validators=[DataRequired()])
-    address = StringField('login', validators=[DataRequired()])
+    login = StringField('login', validators=[DataRequired()])
     password = PasswordField('password', validators=[DataRequired()])
     password_repeat = PasswordField('repeat password', validators=[DataRequired()])
     submit = SubmitField('submit')

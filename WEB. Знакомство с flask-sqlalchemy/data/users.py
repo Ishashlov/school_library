@@ -12,18 +12,13 @@ class User(SqlAlchemyBase, UserMixin):
 
     id = sqlalchemy.Column(sqlalchemy.Integer,
                            primary_key=True, autoincrement=True)
-    surname = sqlalchemy.Column(sqlalchemy.String, nullable=False)
     name = sqlalchemy.Column(sqlalchemy.String, nullable=False)
-    age = sqlalchemy.Column(sqlalchemy.Integer, nullable=False)
-    position = sqlalchemy.Column(sqlalchemy.String, nullable=False)
-    speciality = sqlalchemy.Column(sqlalchemy.String, nullable=False)
-    address = sqlalchemy.Column(sqlalchemy.String, nullable=False)
+    surname = sqlalchemy.Column(sqlalchemy.String, nullable=False)
+    clas = sqlalchemy.Column(sqlalchemy.Integer, nullable=False)
     email = sqlalchemy.Column(sqlalchemy.String,
                               index=True, unique=True, nullable=False)
+    login = sqlalchemy.Column(sqlalchemy.String, nullable=False)
     hashed_password = sqlalchemy.Column(sqlalchemy.String, nullable=True)
-    created_date = sqlalchemy.Column(sqlalchemy.DateTime,
-                                     default=datetime.datetime.now)
-    # jobs = orm.relationship("jobs", back_populates='users')
 
     def __repr__(self):
         return f'''{self.surname} {self.name} {self.age} {self.position} {self.speciality}
