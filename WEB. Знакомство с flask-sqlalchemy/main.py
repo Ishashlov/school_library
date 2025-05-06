@@ -1,19 +1,33 @@
 from flask import Flask, render_template, redirect
 from flask_login import (LoginManager, login_user, login_required,
-                         logout_user)
+                         logout_user, current_user)
 
 from data import db_session
 
 from data.users import User
-from data.jobs import Jobs
-from data.registration import RegisterForm
-from data.LoginForm import LoginForm
+from data.news import News
+from data.books import Books
+from forms.registration import RegisterForm
+from forms.login import LoginForm
+from forms.add_news import NewsForm
+from forms.add_books import BooksForm
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
 
 login_manager = LoginManager()
 login_manager.init_app(app)
+
+
+# @app.route("/")
+# def home():
+#     authors = ["Пушкин", "Толстой", "Грибоедов", "Фет", "Блок"]
+#     genres = [
+#         "Проза", "Поэзия", "Роман", "Рассказ", "Новелла", "Научная фантастика", "Приключения",
+#         "Романтика", "Драма", "Эссе", "Мемуары", "Философия", "Биография", "Фэнтези",
+#         "Исторический роман", "Повесть", "Бизнес", "Кулинарные книги"
+#     ]
+#     return render_template("books.html", authors=authors, genres=genres, username=session.get('username'))
 
 
 @login_manager.user_loader
@@ -35,6 +49,13 @@ def login():
                                message="Неправильный логин или пароль",
                                form=form)
     return render_template('login.html', title='Авторизация', form=form)
+
+
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return redirect("/")
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -68,23 +89,59 @@ def reqister():
 @app.route("/")
 def index():
     db_sess = db_session.create_session()
-    jobs = db_sess.query(Jobs).all()
-    users = db_sess.query(User).all()
-    names = {name.id: (name.surname, name.name) for name in users}
-    return render_template('index.html', jobs=jobs,
-                           names=names, title='Загловок')
+    news = db_sess.query(News).all()
+    return render_template("index.html", news=news)
 
 
-@app.route("/logout")
+@app.route('/news', methods=['GET', 'POST'])
 @login_required
-def logout():
-    logout_user()
-    return redirect("/")
+def add_news():
+    form = NewsForm()
+    if form.validate_on_submit():
+        db_sess = db_session.create_session()
+        news = News()
+        news.title = form.title.data
+        news.content = form.content.data
+        current_user.news.append(news)
+        db_sess.merge(current_user)
+        db_sess.commit()
+        return redirect('/')
+    return render_template('add_news.html', title='Добавление новости',
+                           form=form)
+
+
+@app.route('/books')
+def books():
+    db_sess = db_session.create_session()
+    books = db_sess.query(Books).all()
+    return render_template("books.html", books=books)
+
+
+@app.route('/add_books', methods=['GET', 'POST'])
+@login_required
+def add_books():
+    form = BooksForm()
+    if form.validate_on_submit():
+        db_sess = db_session.create_session()
+        books = Books()
+        books.title = form.title.data
+        books.author = form.author.data
+        books.genre = form.genre.data
+        books.status = form.status.data
+        books.img = form.img.data
+        books.date = form.date.data
+        books.user_id = 2
+        current_user.books.append(books)
+        db_sess.merge(current_user)
+        db_sess.commit()
+        return redirect('/books')
+    return render_template('add_books.html', title='Добавление книги',
+                           form=form)
 
 
 def main():
-    db_session.global_init("db/school_library.sqlite")
-    app.run(port=4444)
+    db_session.global_init("db/school_library.db")
+    app.run(port=4000)
 
 
 if __name__ == '__main__':

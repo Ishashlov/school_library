@@ -12,17 +12,35 @@
     </head>
     <body>
     <header>
-        <h1>Миссия Колонизация Марса</h1>
-        <h4>И на Марсе будут яблони цвести!</h4>
-        {% if current_user.is_authenticated %}
-    <a class="navbar-brand" href="/logout">{{ current_user.name }}</a>
-        {% else %}
-    <p>
-        <a class="btn btn-primary " href="/register">Зарегистрироваться</a>
-        <a class="btn btn-success" href="/login">Войти</a>
-    </p>
-        {% endif %}
+        <h1>Школьная библиотека</h1>
+        <blockquote>Я получил образование в библиотеке. Совершенно бесплатно. Рэй Брэдбери</blockquote>
     </header>
+    <ul class="nav nav-pills">
+  <li class="nav-item">
+    <a class="nav-link active" aria-current="page" href="/">Главная </a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="/books">Книги</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="#">Link</a>
+  </li>
+        {% if current_user.is_authenticated %}
+        <li class="nav-item">
+    <a class="nav-link disabled" aria-disabled="true">{{ current_user.name }}</a>
+  </li>
+               <li class="nav-item">
+    <a class="nav-link" href="/logout">Выйти</a>
+  </li>
+        {% else %}
+        <li class="nav-item">
+    <a class="nav-link" href="/register">Зарегистрироваться</a>
+  </li>
+        <li class="nav-item">
+    <a class="nav-link" href="/login">Войти</a>
+  </li>
+        {% endif %}
+</ul>
         <!-- Begin page content -->
         <main role="main" class="container">
         {% block content %}{% endblock %}

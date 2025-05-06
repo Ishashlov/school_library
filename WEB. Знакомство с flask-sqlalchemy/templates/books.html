@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h3 xmlns="http://www.w3.org/1999/html">Список книг</h3>
+{% if current_user.is_authenticated and current_user.id == 2 %}
+    <a href="add_books" class="btn btn-secondary">Добавить книгу</a>
+{% endif %}
+{% for item in books%}
+<div class="card" style="width: 14rem;">
+  <img src="/static/images/{{item.img}}" class="card-img-top" alt="Обложка">
+  <div class="card-body">
+    <p class="card-text">{{item.title}}</p>
+      <p class="card-text">{{item.author}}</p>
+      <p class="card-text"><small class="text-body-secondary">{{item.genre}}</small></p>
+  </div>
+</div>
+{% if current_user.is_authenticated and current_user.id == 2 %}
+    <div>
+        <a href="/job/{{ item.id }}" class="btn btn-warning">
+            Изменить
+        </a>
+        <a href="/job_delete/{{ item.id }}" class="btn btn-danger">
+            Удалить
+        </a>
+    </div>
+{% endif %}
+{% endfor %}
+{% endblock %}

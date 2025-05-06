@@ -19,6 +19,8 @@ class User(SqlAlchemyBase, UserMixin):
                               index=True, unique=True, nullable=False)
     login = sqlalchemy.Column(sqlalchemy.String, nullable=False)
     hashed_password = sqlalchemy.Column(sqlalchemy.String, nullable=True)
+    news = orm.relationship("News", back_populates='user')
+    books = orm.relationship("Books", back_populates='user')
 
     def __repr__(self):
         return f'''{self.surname} {self.name} {self.age} {self.position} {self.speciality}
