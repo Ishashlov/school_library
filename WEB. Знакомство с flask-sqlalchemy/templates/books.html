@@ -5,24 +5,70 @@
 {% if current_user.is_authenticated and current_user.id == 2 %}
     <a href="add_books" class="btn btn-secondary">Добавить книгу</a>
 {% endif %}
-{% for item in books%}
+{% for i in range(0, books|length, 3) %}
+<div class="card-group">
 <div class="card" style="width: 14rem;">
-  <img src="/static/images/{{item.img}}" class="card-img-top" alt="Обложка">
+  <img src="/static/images/{{books[i].img}}" class="card-img-top" alt="Обложка" style="width: 14rem;">
   <div class="card-body">
-    <p class="card-text">{{item.title}}</p>
-      <p class="card-text">{{item.author}}</p>
-      <p class="card-text"><small class="text-body-secondary">{{item.genre}}</small></p>
+    <p class="card-text">{{books[i].title}}</p>
+      <p class="card-text">{{books[i].author}}</p>
+      <p class="card-text"><small class="text-body-secondary">{{books[i].genre}}</small></p>
   </div>
-</div>
-{% if current_user.is_authenticated and current_user.id == 2 %}
+    {% if current_user.is_authenticated and current_user.id == 2 %}
     <div>
-        <a href="/job/{{ item.id }}" class="btn btn-warning">
+        <a href="/books/{{ books[i].id }}" class="btn btn-warning">
             Изменить
         </a>
-        <a href="/job_delete/{{ item.id }}" class="btn btn-danger">
+        <a href="/job_delete/{{ books[i].id }}" class="btn btn-danger">
+            Удалить
+        </a>
+    </div>
+    {% endif %}
+</div>
+
+
+    {% if i + 1 < books|length %}
+    <div class="card" style="width: 14rem;">
+  <img src="/static/images/{{books[i + 1].img}}" class="card-img-top" alt="Обложка">
+  <div class="card-body">
+    <p class="card-text">{{books[i + 1].title}}</p>
+      <p class="card-text">{{books[i + 1].author}}</p>
+      <p class="card-text"><small class="text-body-secondary">{{books[i + 1].genre}}</small></p>
+  </div>
+        {% if current_user.is_authenticated and current_user.id == 2 %}
+    <div>
+        <a href="/books/{{ books[i].id }}" class="btn btn-warning">
+            Изменить
+        </a>
+        <a href="/job_delete/{{ books[i].id }}" class="btn btn-danger">
             Удалить
         </a>
     </div>
 {% endif %}
+</div>
+    {% endif %}
+{% if i + 2 < books|length %}
+    <div class="card" style="width: 14rem;">
+  <img src="/static/images/{{books[i + 2].img}}" class="card-img-top" alt="Обложка">
+  <div class="card-body">
+    <p class="card-text">{{books[i + 2].title}}</p>
+      <p class="card-text">{{books[i + 2].author}}</p>
+      <p class="card-text"><small class="text-body-secondary">{{books[i + 2].genre}}</small></p>
+  </div>
+        {% if current_user.is_authenticated and current_user.id == 2 %}
+    <div>
+        <a href="/books/{{ books[i].id }}" class="btn btn-warning">
+            Изменить
+        </a>
+        <a href="/job_delete/{{ books[i].id }}" class="btn btn-danger">
+            Удалить
+        </a>
+    </div>
+{% endif %}
+</div>
+    {% endif %}
+
+</div>
+
 {% endfor %}
 {% endblock %}

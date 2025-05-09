@@ -1,8 +1,11 @@
-from flask import Flask, render_template, redirect
+from flask import Flask, render_template, redirect, abort, request
 from flask_login import (LoginManager, login_user, login_required,
                          logout_user, current_user)
 
 from data import db_session
+
+import jinja2
+
 
 from data.users import User
 from data.news import News
@@ -131,12 +134,86 @@ def add_books():
         books.img = form.img.data
         books.date = form.date.data
         books.user_id = 2
+        books.reader = form.reader.data
         current_user.books.append(books)
         db_sess.merge(current_user)
         db_sess.commit()
         return redirect('/books')
     return render_template('add_books.html', title='Добавление книги',
                            form=form)
+
+
+@app.route('/news/<int:id>', methods=['GET', 'POST'])
+@login_required
+def edit_news(id):
+    form = NewsForm()
+    if request.method == "GET":
+        db_sess = db_session.create_session()
+        news = db_sess.query(News).filter(News.id == id,
+                                          News.user == current_user
+                                          ).first()
+        if news:
+            form.title.data = news.title
+            form.content.data = news.content
+        else:
+            abort(404)
+    if form.validate_on_submit():
+        db_sess = db_session.create_session()
+        news = db_sess.query(News).filter(News.id == id,
+                                          News.user == current_user
+                                          ).first()
+        if news:
+            news.title = form.title.data
+            news.content = form.content.data
+            db_sess.commit()
+            return redirect('/')
+        else:
+            abort(404)
+    return render_template('add_news.html',
+                           title='Редактирование новости',
+                           form=form
+                           )
+
+
+@app.route('/books/<int:id>', methods=['GET', 'POST'])
+@login_required
+def edit_books(id):
+    form = BooksForm()
+    if request.method == "GET":
+        db_sess = db_session.create_session()
+        books = db_sess.query(Books).filter(Books.id == id,
+                                            Books.user == current_user).first()
+        if books:
+            print(books.reader)
+            form.title.data = books.title
+            form.author.data = books.author
+            form.genre.data = books.genre
+            form.status.data = books.status
+            form.img.data = books.img
+            form.date.data = books.date
+            form.reader = books.reader
+        else:
+            abort(404)
+    # if form.validate_on_submit():
+    #     db_sess = db_session.create_session()
+    #     books = db_sess.query(Books).filter(Books.id == id,
+    #                                         Books.user == current_user).first()
+    #     if books:
+    #         books.title = form.title.data
+    #         books.author = form.author.data
+    #         books.genre = form.genre.data
+    #         books.status = form.status.data
+    #         books.img = form.img.data
+    #         books.date = form.date.data
+    #         books.reader = form.reader
+    #         db_sess.commit()
+    #         return redirect('/books')
+    #     else:
+    #         abort(404)
+    return render_template('add_books.html',
+                           title='Редактирование книги',
+                           form=form
+                           )
 
 
 def main():

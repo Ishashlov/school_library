@@ -16,6 +16,7 @@ class Books(SqlAlchemyBase):
     status = sqlalchemy.Column(sqlalchemy.Boolean, nullable=True)
     img = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     date = sqlalchemy.Column(sqlalchemy.Date, nullable=True)
+    reader = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     user_id = sqlalchemy.Column(sqlalchemy.Integer,
                                 sqlalchemy.ForeignKey("users.id"))
     user = orm.relationship('User')
