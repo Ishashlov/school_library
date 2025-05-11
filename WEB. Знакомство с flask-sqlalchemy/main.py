@@ -194,26 +194,54 @@ def edit_books(id):
             form.reader = books.reader
         else:
             abort(404)
-    # if form.validate_on_submit():
-    #     db_sess = db_session.create_session()
-    #     books = db_sess.query(Books).filter(Books.id == id,
-    #                                         Books.user == current_user).first()
-    #     if books:
-    #         books.title = form.title.data
-    #         books.author = form.author.data
-    #         books.genre = form.genre.data
-    #         books.status = form.status.data
-    #         books.img = form.img.data
-    #         books.date = form.date.data
-    #         books.reader = form.reader
-    #         db_sess.commit()
-    #         return redirect('/books')
-    #     else:
-    #         abort(404)
+    if form.validate_on_submit():
+        db_sess = db_session.create_session()
+        books = db_sess.query(Books).filter(Books.id == id,
+                                            Books.user == current_user).first()
+        if books:
+            books.title = form.title.data
+            books.author = form.author.data
+            books.genre = form.genre.data
+            books.status = form.status.data
+            books.img = form.img.data
+            books.date = form.date.data
+            books.reader = form.reader
+            db_sess.commit()
+            return redirect('/books')
+        else:
+            abort(404)
     return render_template('add_books.html',
                            title='Редактирование книги',
                            form=form
                            )
+
+
+@app.route('/news_delete/<int:id>', methods=['GET', 'POST'])
+@login_required
+def news_delete(id):
+    db_sess = db_session.create_session()
+    news = db_sess.query(News).filter(News.id == id,
+                                      News.user == current_user
+                                      ).first()
+    if news:
+        db_sess.delete(news)
+        db_sess.commit()
+    else:
+        abort(404)
+    return redirect('/')
+
+
+@app.route('/books_delete/<int:id>', methods=['GET', 'POST'])
+@login_required
+def books_delete(id):
+    db_sess = db_session.create_session()
+    books = db_sess.query(Books).filter(Books.id == id).first()
+    if books:
+        db_sess.delete(books)
+        db_sess.commit()
+    else:
+        abort(404)
+    return redirect('/books')
 
 
 def main():

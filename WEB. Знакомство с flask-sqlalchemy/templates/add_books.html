@@ -51,7 +51,13 @@
     </p>
     <p>
         {{ form.reader.label }}<br>
-        {{ form.reader(class="form-control") }}<br>
+        <input
+    type="text"
+    name="{{ form.reader.name }}"
+    id="{{ form.reader.id }}"
+    class="form-control form-control-lg"
+    value="{{ form.reader.data }}"
+>
         {% for error in form.reader.errors %}
             <p content="alert alert-danger" role="alert">
                 {{ error }}
