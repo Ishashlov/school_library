@@ -6,7 +6,6 @@ from data import db_session
 
 import jinja2
 
-
 from data.users import User
 from data.news import News
 from data.books import Books
@@ -248,6 +247,12 @@ def books_delete(id):
 @login_required
 def profile():
     return render_template('profile.html', user=current_user)
+
+
+@app.route('/book/<author>/<title>')
+def show_book(author, title):
+    book = Books.query.filter_by(author=author, title=title).first_or_404()
+    return render_template('show_book.html', book=book)
 
 
 def main():
