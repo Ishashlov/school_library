@@ -6,7 +6,6 @@ from data import db_session
 
 import jinja2
 
-
 from data.users import User
 from data.news import News
 from data.books import Books
@@ -14,6 +13,7 @@ from forms.registration import RegisterForm
 from forms.login import LoginForm
 from forms.add_news import NewsForm
 from forms.add_books import BooksForm
+import datetime
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
@@ -113,6 +113,12 @@ def add_news():
                            form=form)
 
 
+@app.route('/profile')
+@login_required
+def profile():
+    return render_template('profile.html', user=current_user)
+
+
 @app.route('/books')
 def books():
     db_sess = db_session.create_session()
@@ -126,21 +132,19 @@ def add_books():
     form = BooksForm()
     if form.validate_on_submit():
         db_sess = db_session.create_session()
-        books = Books()
-        books.title = form.title.data
-        books.author = form.author.data
-        books.genre = form.genre.data
-        books.status = form.status.data
-        books.img = form.img.data
-        books.date = form.date.data
-        books.user_id = 2
-        books.reader = form.reader.data
-        current_user.books.append(books)
-        db_sess.merge(current_user)
+        book = Books(
+            title=form.title.data,
+            author=form.author.data,
+            genre=form.genre.data,
+            img=form.img.data,
+            total_copies=form.total_copies.data,
+            copies_available=form.total_copies.data,
+            user_id=current_user.id
+        )
+        db_sess.add(book)
         db_sess.commit()
         return redirect('/books')
-    return render_template('add_books.html', title='Добавление книги',
-                           form=form)
+    return render_template('add_books.html', form=form)
 
 
 @app.route('/news/<int:id>', methods=['GET', 'POST'])
@@ -231,6 +235,67 @@ def news_delete(id):
     return redirect('/')
 
 
+@app.route('/read/<filename>')
+def read_book(filename):
+    return render_template('read_book.html', filename=filename)
+
+
+@app.route('/take_book/<int:book_id>', methods=['POST'])
+@login_required
+def take_book(book_id):
+    db_sess = db_session.create_session()
+
+    # Используем современный метод query.get() -> session.get()
+    book = db_sess.get(Books, book_id)  # Изменено здесь
+
+    if not book:
+        return redirect('/books')
+
+    # Добавляем проверку возвращаемого значения
+    result = book.can_take_book(current_user)
+    if result is None or not isinstance(result, tuple) or len(result) != 2:
+        return redirect('/books')
+
+    can_take, message = result
+
+    if not can_take:
+        return redirect('/books')
+
+    # Обработка взятия книги
+    try:
+        book.copies_available -= 1
+        book.reader = f"{current_user.surname} {current_user.name}"
+        book.date = datetime.date.today()
+
+        if book.copies_available == 0:
+            book.status = False
+
+        db_sess.commit()
+    except Exception as e:
+        db_sess.rollback()
+
+    return redirect('/books')
+
+
+@app.route('/return_book/<int:book_id>', methods=['POST'])
+@login_required
+def return_book(book_id):
+    db_sess = db_session.create_session()
+    book = db_sess.query(Books).get(book_id)
+
+    if not book:
+        abort(404)
+
+    if book.reader == f"{current_user.surname} {current_user.name}":
+        book.copies_available += 1
+        if book.copies_available == book.total_copies:
+            book.reader = None
+            book.date = None
+        db_sess.commit()
+
+    return redirect('/books')
+
+
 @app.route('/books_delete/<int:id>', methods=['GET', 'POST'])
 @login_required
 def books_delete(id):
@@ -246,6 +311,7 @@ def books_delete(id):
 
 def main():
     db_session.global_init("db/school_library.db")
+    db_session.apply_migrations()
     app.run(port=4000)
 
 

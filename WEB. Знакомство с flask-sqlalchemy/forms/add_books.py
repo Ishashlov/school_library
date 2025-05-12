@@ -6,10 +6,9 @@ from wtforms.validators import DataRequired
 
 class BooksForm(FlaskForm):
     title = StringField('Название', validators=[DataRequired()])
-    author = StringField("Автор")
-    genre = StringField("Жанр")
-    img = StringField("Название картинки")
-    date = DateField("Дата выдачи")
-    reader = StringField("У кого")
-    status = BooleanField('В наличии')
-    submit = SubmitField('Применить')
+    author = StringField('Автор', validators=[DataRequired()])
+    genre = StringField('Жанр', validators=[DataRequired()])
+    img = StringField('Обложка (имя файла)')
+    total_copies = IntegerField('Количество копий', default=1, validators=[DataRequired()])
+    status = BooleanField('Доступна', default=True)
+    submit = SubmitField('Сохранить')

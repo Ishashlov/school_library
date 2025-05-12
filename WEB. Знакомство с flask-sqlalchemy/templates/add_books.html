@@ -1,71 +1,66 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1>Добавление книги</h1>
-<form action="" method="post">
-    {{ form.hidden_tag() }}
-    <p>
-        {{ form.title.label }}<br>
-        {{ form.title(class="form-control") }}<br>
-        {% for error in form.title.errors %}
-            <p class="alert alert-danger" role="alert">
-                {{ error }}
-            </p>
-        {% endfor %}
-    </p>
-    <p>
-        {{ form.author.label }}<br>
-        {{ form.author(class="form-control") }}<br>
-        {% for error in form.author.errors %}
-            <p content="alert alert-danger" role="alert">
-                {{ error }}
-            </p>
-        {% endfor %}
-    </p>
-    <p>
-        {{ form.genre.label }}<br>
-        {{ form.genre(class="form-control") }}<br>
-        {% for error in form.genre.errors %}
-            <p content="alert alert-danger" role="alert">
-                {{ error }}
-            </p>
-        {% endfor %}
-    </p>
-    <p>
-        {{ form.img.label }}<br>
-        {{ form.img(class="form-control") }}<br>
-        {% for error in form.img.errors %}
-            <p content="alert alert-danger" role="alert">
-                {{ error }}
-            </p>
-        {% endfor %}
-    </p>
-    <p>
-        {{ form.date.label }}<br>
-        {{ form.date(class="form-control") }}<br>
-        {% for error in form.date.errors %}
-            <p content="alert alert-danger" role="alert">
-                {{ error }}
-            </p>
-        {% endfor %}
-    </p>
-    <p>
-        {{ form.reader.label }}<br>
-        <input
-    type="text"
-    name="{{ form.reader.name }}"
-    id="{{ form.reader.id }}"
-    class="form-control form-control-lg"
-    value="{{ form.reader.data }}"
->
-        {% for error in form.reader.errors %}
-            <p content="alert alert-danger" role="alert">
-                {{ error }}
-            </p>
-        {% endfor %}
-    </p>
-    <p>{{ form.status() }} {{ form.status.label }}</p>
-    <p>{{ form.submit(type="submit", class="btn btn-primary") }}</p>
-    {{message}}
-</form>
+<div class="container mt-4">
+    <h1 class="mb-4">Добавление книги</h1>
+
+    <form method="POST" enctype="multipart/form-data">
+        {{ form.hidden_tag() }}
+
+        <!-- Название -->
+        <div class="mb-3">
+            {{ form.title.label(class="form-label") }}
+            {{ form.title(class="form-control") }}
+            {% for error in form.title.errors %}
+            <div class="alert alert-danger mt-2">{{ error }}</div>
+            {% endfor %}
+        </div>
+
+        <!-- Автор -->
+        <div class="mb-3">
+            {{ form.author.label(class="form-label") }}
+            {{ form.author(class="form-control") }}
+            {% for error in form.author.errors %}
+            <div class="alert alert-danger mt-2">{{ error }}</div>
+            {% endfor %}
+        </div>
+
+        <!-- Жанр -->
+        <div class="mb-3">
+            {{ form.genre.label(class="form-label") }}
+            {{ form.genre(class="form-control") }}
+            {% for error in form.genre.errors %}
+            <div class="alert alert-danger mt-2">{{ error }}</div>
+            {% endfor %}
+        </div>
+
+        <!-- Обложка -->
+        <div class="mb-3">
+            {{ form.img.label(class="form-label") }}
+            {{ form.img(class="form-control") }}
+            <small class="text-muted">Например: book_cover.jpg</small>
+            {% for error in form.img.errors %}
+            <div class="alert alert-danger mt-2">{{ error }}</div>
+            {% endfor %}
+        </div>
+
+        <!-- Количество копий -->
+        <div class="mb-3">
+            {{ form.total_copies.label(class="form-label") }}
+            {{ form.total_copies(class="form-control", min="1") }}
+            {% for error in form.total_copies.errors %}
+            <div class="alert alert-danger mt-2">{{ error }}</div>
+            {% endfor %}
+        </div>
+
+        <!-- Статус -->
+        <div class="mb-3 form-check">
+            {{ form.status(class="form-check-input") }}
+            {{ form.status.label(class="form-check-label") }}
+        </div>
+
+        <!-- Кнопка отправки -->
+        <button type="submit" class="btn btn-primary">Сохранить</button>
+    </form>
+</div>
 {% endblock %}
