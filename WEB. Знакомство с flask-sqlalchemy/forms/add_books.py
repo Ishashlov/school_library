@@ -10,6 +10,6 @@ class BooksForm(FlaskForm):
     genre = StringField("Жанр")
     img = StringField("Название картинки")
     date = DateField("Дата выдачи")
-    reader = StringField("У кого")
+    reader = IntegerField("У кого")
     status = BooleanField('В наличии')
     submit = SubmitField('Применить')

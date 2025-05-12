@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1>Добавление книги</h1>
+<h3> {{ title }} </h3>
 <form action="" method="post">
     {{ form.hidden_tag() }}
     <p>
@@ -51,13 +51,7 @@
     </p>
     <p>
         {{ form.reader.label }}<br>
-        <input
-    type="text"
-    name="{{ form.reader.name }}"
-    id="{{ form.reader.id }}"
-    class="form-control form-control-lg"
-    value="{{ form.reader.data }}"
->
+        {{ form.reader(class="form-control") }}<br>
         {% for error in form.reader.errors %}
             <p content="alert alert-danger" role="alert">
                 {{ error }}

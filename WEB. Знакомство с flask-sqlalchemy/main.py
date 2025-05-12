@@ -191,7 +191,7 @@ def edit_books(id):
             form.status.data = books.status
             form.img.data = books.img
             form.date.data = books.date
-            form.reader = books.reader
+            form.reader.data = books.reader
         else:
             abort(404)
     if form.validate_on_submit():
@@ -205,7 +205,7 @@ def edit_books(id):
             books.status = form.status.data
             books.img = form.img.data
             books.date = form.date.data
-            books.reader = form.reader
+            books.reader = form.reader.data
             db_sess.commit()
             return redirect('/books')
         else:
@@ -244,9 +244,15 @@ def books_delete(id):
     return redirect('/books')
 
 
+@app.route('/profile')
+@login_required
+def profile():
+    return render_template('profile.html', user=current_user)
+
+
 def main():
     db_session.global_init("db/school_library.db")
-    app.run(port=4000)
+    app.run(port=4080)
 
 
 if __name__ == '__main__':

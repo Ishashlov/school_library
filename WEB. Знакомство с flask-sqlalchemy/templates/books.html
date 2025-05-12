@@ -8,7 +8,7 @@
 {% for i in range(0, books|length, 3) %}
 <div class="card-group">
 <div class="card" style="width: 14rem;">
-  <img src="/static/images/{{books[i].img}}" class="card-img-top" alt="Обложка" style="width: 14rem;">
+  <img src="/static/images/{{books[i].img}}" class="card-img-top" alt="Обложка" style="width: 17rem;">
   <div class="card-body">
     <p class="card-text">{{books[i].title}}</p>
       <p class="card-text">{{books[i].author}}</p>
@@ -29,7 +29,7 @@
 
     {% if i + 1 < books|length %}
     <div class="card" style="width: 14rem;">
-  <img src="/static/images/{{books[i + 1].img}}" class="card-img-top" alt="Обложка">
+  <img src="/static/images/{{books[i + 1].img}}" class="card-img-top" alt="Обложка" style="width: 17rem;">
   <div class="card-body">
     <p class="card-text">{{books[i + 1].title}}</p>
       <p class="card-text">{{books[i + 1].author}}</p>
@@ -49,7 +49,7 @@
     {% endif %}
 {% if i + 2 < books|length %}
     <div class="card" style="width: 14rem;">
-  <img src="/static/images/{{books[i + 2].img}}" class="card-img-top" alt="Обложка">
+  <img src="/static/images/{{books[i + 2].img}}" class="card-img-top" alt="Обложка" style="width: 17rem;">
   <div class="card-body">
     <p class="card-text">{{books[i + 2].title}}</p>
       <p class="card-text">{{books[i + 2].author}}</p>

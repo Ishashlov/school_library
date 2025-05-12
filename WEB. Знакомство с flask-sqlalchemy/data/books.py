@@ -10,13 +10,13 @@ class Books(SqlAlchemyBase):
 
     id = sqlalchemy.Column(sqlalchemy.Integer,
                            primary_key=True, autoincrement=True)
-    title = sqlalchemy.Column(sqlalchemy.String, nullable=True)
+    title = sqlalchemy.Column(sqlalchemy.String, nullable=False)
     author = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     genre = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     status = sqlalchemy.Column(sqlalchemy.Boolean, nullable=True)
     img = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     date = sqlalchemy.Column(sqlalchemy.Date, nullable=True)
-    reader = sqlalchemy.Column(sqlalchemy.String, nullable=True)
+    reader = sqlalchemy.Column(sqlalchemy.Integer, nullable=True)
     user_id = sqlalchemy.Column(sqlalchemy.Integer,
                                 sqlalchemy.ForeignKey("users.id"))
     user = orm.relationship('User')
