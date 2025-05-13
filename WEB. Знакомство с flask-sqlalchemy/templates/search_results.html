@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">Результаты поиска: "{{ query }}"</h2>
+
+    {% if not books %}
+    <div class="alert alert-info">
+        По запросу "{{ query }}" ничего не найдено.
+    </div>
+    {% else %}
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        {% for book in books %}
+        <div class="col">
+            <div class="card h-100 shadow-sm">
+                <img src="{{ url_for('static', filename='images/' + (book.img if book.img else 'default_book.jpg')) }}"
+                     class="card-img-top"
+                     alt="{{ book.title }}"
+                     style="height: 200px; object-fit: contain;">
+
+                <div class="card-body">
+                    <h5 class="card-title">{{ book.title }}</h5>
+                    <p class="card-text text-muted">{{ book.author }}</p>
+                    <p class="card-text">{{ book.genre }}</p>
+
+                </div>
+
+                <div class="card-footer bg-white">
+                    <a href="{{ url_for('books') }}?highlight={{ query }}"
+                       class="btn btn-outline-primary w-100">
+                        Посмотреть в каталоге
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,8 +1,9 @@
-from flask import Flask, render_template, redirect, abort, request
+from flask import Flask, render_template, redirect, abort, request, url_for
 from flask_login import (LoginManager, login_user, login_required,
                          logout_user, current_user)
 
 from data import db_session
+from sqlalchemy import or_, and_, case, desc
 
 import jinja2
 
@@ -110,13 +111,6 @@ def add_news():
         return redirect('/')
     return render_template('add_news.html', title='Добавление новости',
                            form=form)
-
-
-@app.route('/books')
-def books():
-    db_sess = db_session.create_session()
-    books = db_sess.query(Books).all()
-    return render_template("books.html", books=books)
 
 
 @app.route('/add_books', methods=['GET', 'POST'])
@@ -230,6 +224,14 @@ def news_delete(id):
     return redirect('/')
 
 
+@app.route('/books')
+def books():
+    highlight = request.args.get('highlight', '')
+    db_sess = db_session.create_session()
+    books = db_sess.query(Books).all()
+    return render_template("books.html", books=books, highlight=highlight)
+
+
 @app.route('/books_delete/<int:id>', methods=['GET', 'POST'])
 @login_required
 def books_delete(id):
@@ -247,6 +249,25 @@ def books_delete(id):
 @login_required
 def profile():
     return render_template('profile.html', user=current_user)
+
+
+@app.route('/search')
+def search():
+    query = request.args.get('q', '').strip()
+    db_sess = db_session.create_session()
+
+    if not query:
+        return redirect(url_for('index'))
+
+    books = db_sess.query(Books).filter(
+        or_(
+            Books.title.ilike(f'%{query}%'),
+            Books.author.ilike(f'%{query}%'),
+            Books.genre.ilike(f'%{query}%')
+        )
+    ).all()
+
+    return render_template('search_results.html', books=books, query=query)
 
 
 @app.route('/book/<author>/<title>')

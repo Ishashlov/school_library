@@ -24,6 +24,18 @@
 </style>
         <h1>Школьная библиотека</h1>
         <blockquote>Я получил образование в библиотеке. Совершенно бесплатно. Рэй Брэдбери</blockquote>
+        <div class="col-md-6">
+        <form action="{{ url_for('search') }}" method="GET" class="search-form">
+            <div class="input-group">
+                <input type="text" name="q" class="form-control form-control-lg"
+                       placeholder="Поиск книг..." required>
+                <button type="submit" class="btn btn-primary btn-lg">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+        </form>
+            <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    </div>
     </header>
     <ul class="nav nav-pills">
   <li class="nav-item">
